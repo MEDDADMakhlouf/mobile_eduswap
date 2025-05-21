@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:flutter_svg/flutter_svg.dart'; // Added import for flutter_svg
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -26,10 +27,12 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/logo.png',
+              SvgPicture.asset(
+                'assets/logo.svg',
                 width: 100,
                 height: 100,
+                colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn), // Ensure logo is white
+                placeholderBuilder: (BuildContext context) => CircularProgressIndicator(),
               ),
               SizedBox(height: 20),
               Text(
