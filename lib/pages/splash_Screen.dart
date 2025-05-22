@@ -30,19 +30,19 @@ class _SplashScreenState extends State<SplashScreen> {
               SvgPicture.asset(
                 'assets/logo.svg',
                 width: 100,
-                height: 100,
+                height: 220,
                 colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn), // Ensure logo is white
                 placeholderBuilder: (BuildContext context) => CircularProgressIndicator(),
               ),
-              SizedBox(height: 20),
-              Text(
-                'TimeSwap',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+              // SizedBox(height: 20),
+              // Text(
+              //   'TimeSwap',
+              //   style: TextStyle(
+              //     fontSize: 32,
+              //     fontWeight: FontWeight.bold,
+              //     color: Colors.white,
+              //   ),
+              // ),
               SizedBox(height: 10),
               Text(
                 'To Easily Request And Manage Schedule Swaps',
