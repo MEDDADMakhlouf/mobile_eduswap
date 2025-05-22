@@ -8,9 +8,12 @@ plugins {
 android {
     namespace = "com.example.pfc_mobile"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // FIX: Override flutter.ndkVersion with the specific version required by your plugins
+    ndkVersion = "27.0.12077973" // <-- CHANGE THIS LINE!
 
     compileOptions {
+        // You might need to adjust these based on your Java/Kotlin setup and other dependencies
+        // If you encounter issues with these versions, revert to 1.8.
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -20,11 +23,8 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.pfc_mobile"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 21
+        minSdk = 21 // Keep this at 21 or higher if your plugins require it
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -32,8 +32,6 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
         }
     }

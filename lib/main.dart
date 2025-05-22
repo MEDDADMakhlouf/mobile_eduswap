@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'TimeSwap',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true, // Recommended for modern Flutter apps
       ),
       initialRoute: '/splash',
       routes: {
@@ -52,16 +53,51 @@ class _MainScreenState extends State<MainScreen> {
     SettingsScreen(),
   ];
 
+  // List of titles corresponding to your screens
+  static final List<String> _screenTitles = <String>[
+    'Home',
+    'Swap Requests',
+    'Notifications',
+    'Settings',
+  ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
+  // Helper function to get the app bar title
+  String _getAppBarTitle(int index) {
+    // Ensure index is within bounds to prevent errors
+    if (index >= 0 && index < _screenTitles.length) {
+      return _screenTitles[index];
+    }
+    return 'TimeSwap'; // Default title if index is out of bounds
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
+      appBar: AppBar(
+        backgroundColor: Color(0xFF1E3A8A),
+        foregroundColor: Colors.white, // Ensures title, icons, etc. are white
+        automaticallyImplyLeading: false, // Important to prevent a back button
+        title: Text(
+          _getAppBarTitle(_selectedIndex), // THIS IS THE ONLY PLACE THE TITLE SHOULD BE DISPLAYED
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout), // Color is handled by foregroundColor
+            onPressed: () {
+              Navigator.pushNamed(context, '/logout');
+            },
+          ),
+        ],
+        elevation: 4, // Add a slight shadow
+      ),
+      body: _screens[_selectedIndex], // This displays the currently selected screen
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -83,8 +119,9 @@ class _MainScreenState extends State<MainScreen> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
+        unselectedItemColor: Colors.white70, // Added for better visibility of unselected items
         backgroundColor: Color(0xFF1E3A8A),
+        type: BottomNavigationBarType.fixed, // Crucial fix for background color
         onTap: _onItemTapped,
       ),
     );
