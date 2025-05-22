@@ -17,45 +17,6 @@ class HomeScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
-          PopupMenuButton<String>(
-            icon: Icon(Icons.menu, color: Colors.white),
-            onSelected: (String value) {
-              switch (value) {
-                case 'Home':
-                  Navigator.pushNamed(context, '/home');
-                  break;
-                case 'Swap Request':
-                  Navigator.pushNamed(context, '/swap_request');
-                  break;
-                case 'Notifications':
-                  Navigator.pushNamed(context, '/notifications');
-                  break;
-                case 'Log Out':
-                  Navigator.pushNamed(context, '/logout');
-                  break;
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem<String>(
-                value: 'Home',
-                child: Text('Home'),
-              ),
-              PopupMenuItem<String>(
-                value: 'Swap Request',
-                child: Text('Swap Request'),
-              ),
-              PopupMenuItem<String>(
-                value: 'Notifications',
-                child: Text('Notifications'),
-              ),
-              PopupMenuItem<String>(
-                value: 'Log Out',
-                child: Text('Log Out'),
-              ),
-            ],
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),

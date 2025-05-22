@@ -1,25 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pfc_mobile/pages/home_screen.dart';
+import 'package:pfc_mobile/pages/edit_profile_screen.dart';
+import 'package:pfc_mobile/pages/logout_screen.dart';
+import 'package:pfc_mobile/pages/settings_screen.dart';
 
 void main() {
-  testWidgets('HomeScreen displays initial content', (WidgetTester tester) async {
-    // Build the HomeScreen widget
+  testWidgets('SettingsScreen displays initial content', (WidgetTester tester) async {
+    // Build the SettingsScreen widget
     await tester.pumpWidget(MaterialApp(
-      home: HomeScreen(),
+      home: SettingsScreen(),
+      routes: {
+        '/edit_profile': (context) => EditProfileScreen(),
+        '/logout': (context) => LogoutScreen(),
+      },
     ));
 
-    // Verify that the welcome text is displayed
-    expect(find.text('Welcome Back!'), findsOneWidget);
+    // Verify that the settings title is displayed
+    expect(find.text('Settings'), findsNWidgets(2)); // Once in AppBar, once in body
 
-    // Verify that the notifications section is displayed
-    expect(find.text('New Notifications'), findsOneWidget);
-    expect(find.text('Notification 1: Prof. Smith'), findsOneWidget);
-    expect(find.text('Notification 2: Prof. Jones'), findsOneWidget);
+    // Verify that the options are displayed
+    expect(find.text('Edit Profile'), findsOneWidget);
+    expect(find.text('Log Out'), findsOneWidget);
 
-    // Verify that the timetable section is displayed
-    expect(find.text('Your Timetable'), findsOneWidget);
-    expect(find.text('9:00 AM'), findsOneWidget);
-    expect(find.text('Math'), findsOneWidget);
+    // Test tapping Edit Profile
+    await tester.tap(find.text('Edit Profile'));
+    await tester.pumpAndSettle();
+    expect(find.text('Edit Profile'), findsNWidgets(2)); // Once in AppBar, once in body
+
+    // Test tapping Log Out
+    await tester.tap(find.text('Log Out'));
+    await tester.pumpAndSettle();
+    expect(find.text('Logging out...'), findsOneWidget);
   });
 }

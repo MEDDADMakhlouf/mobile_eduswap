@@ -19,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _signIn() {
-    Navigator.of(context).pushReplacementNamed('/home');
+    Navigator.of(context).pushReplacementNamed('/main'); // Updated to /main
   }
 
   @override
