@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pfc_mobile/pages/login_screen.dart';
 import 'package:pfc_mobile/pages/splash_Screen.dart';
@@ -7,8 +10,16 @@ import 'package:pfc_mobile/pages/notifications_screen.dart';
 import 'package:pfc_mobile/pages/logout_screen.dart';
 import 'package:pfc_mobile/pages/settings_screen.dart';
 import 'package:pfc_mobile/pages/edit_profile_screen.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
+    if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    sqfliteFfiInit();
+    // Assign the FFI database factory globally.
+    databaseFactory = databaseFactoryFfi;
+  }
+
   runApp(const MyApp());
 }
 
