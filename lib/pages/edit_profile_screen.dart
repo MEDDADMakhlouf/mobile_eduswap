@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pfc_mobile/services/database_services.dart';
+import '../models/user.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -17,7 +19,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   
   // List to store URLs and their controllers
   List<String> _urls = ['https://example.com'];
-  List<TextEditingController> _urlControllers = [TextEditingController(text: 'https://example.com')];
+  List<TextEditingController> _urlControllers = [
+    TextEditingController(text: 'https://example.com')
+  ];
   
   bool _emailNotificationsEnabled = true; // Default toggle state
 
@@ -41,18 +45,37 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  void _saveProfile() {
+  void _saveProfile() async {
     if (_formKey.currentState!.validate()) {
       // Update URLs list with the latest values from controllers
       for (int i = 0; i < _urlControllers.length; i++) {
         _urls[i] = _urlControllers[i].text;
       }
 
-      // In a real app, save the data (e.g., to a database or API)
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile updated successfully')),
+      // Create a User instance from your form data
+      final user = User(
+        username: _usernameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        phone: _phoneController.text,
+        role: _roleController.text,
+        urls: _urls,
+        emailNotifications: _emailNotificationsEnabled,
       );
-      Navigator.pop(context); // Go back to SettingsScreen
+
+      try {
+        // Insert user data into your local database
+        await DatabaseService.instance.createUser(user);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile updated and saved offline')),
+        );
+        Navigator.pop(context); // Optionally navigate back
+      } catch (error) {
+        // If there's an error (e.g., theme-related or DB error), show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error saving profile: $error')),
+        );
+      }
     }
   }
 
@@ -69,8 +92,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'Edit Profile',
                   style: TextStyle(
                     fontSize: 28,
@@ -78,7 +101,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   'Update your personal information',
                   style: TextStyle(
@@ -86,28 +109,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     color: Colors.grey[600],
                   ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 // Username Field
-                Text(
+                const Text(
                   'Username',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 TextFormField(
                   controller: _usernameController,
                   decoration: InputDecoration(
                     hintText: 'Enter your username',
                     hintStyle: TextStyle(color: Colors.grey[400]),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
+                    border: const OutlineInputBorder(),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue),
                     ),
                   ),
@@ -118,28 +136,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 // Email Field
-                Text(
+                const Text(
                   'Email',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
                     hintText: 'Enter your email',
                     hintStyle: TextStyle(color: Colors.grey[400]),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
+                    border: const OutlineInputBorder(),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue),
                     ),
                   ),
@@ -153,29 +166,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 // Password Field
-                Text(
+                const Text(
                   'Password',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: 'Enter your new password (optional)',
                     hintStyle: TextStyle(color: Colors.grey[400]),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
+                    border: const OutlineInputBorder(),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue),
                     ),
                   ),
@@ -186,28 +194,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 // Phone Number Field
-                Text(
+                const Text(
                   'Phone Number',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 TextFormField(
                   controller: _phoneController,
                   decoration: InputDecoration(
                     hintText: 'Enter your phone number (optional)',
                     hintStyle: TextStyle(color: Colors.grey[400]),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
+                    border: const OutlineInputBorder(),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue),
                     ),
                   ),
@@ -218,28 +221,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 // Role/Title Field
-                Text(
+                const Text(
                   'Role/Title',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 TextFormField(
                   controller: _roleController,
                   decoration: InputDecoration(
                     hintText: 'Enter your role (e.g., Professor)',
                     hintStyle: TextStyle(color: Colors.grey[400]),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
+                    border: const OutlineInputBorder(),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue),
                     ),
                   ),
@@ -250,16 +248,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 // URLs Section
-                Text(
+                const Text(
                   'URLs',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Column(
                   children: List.generate(_urls.length, (index) {
                     return Padding(
@@ -269,13 +264,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         decoration: InputDecoration(
                           hintText: 'Enter a URL (e.g., https://example.com)',
                           hintStyle: TextStyle(color: Colors.grey[400]),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
+                          border: const OutlineInputBorder(),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
                           ),
-                          focusedBorder: OutlineInputBorder(
+                          focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.blue),
                           ),
                         ),
@@ -289,25 +282,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     );
                   }),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 ElevatedButton.icon(
                   onPressed: _addUrlField,
-                  icon: Icon(Icons.add, color: Colors.white),
-                  label: Text(
+                  icon: const Icon(Icons.add, color: Colors.white),
+                  label: const Text(
                     'Add URL',
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF1E3A8A),
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    backgroundColor: const Color(0xFF1E3A8A),
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 // Notification Settings Section
-                Text(
+                const Text(
                   'Notification Settings',
                   style: TextStyle(
                     fontSize: 20,
@@ -315,16 +308,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       'Email Notifications',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
+                      style: TextStyle(fontSize: 16, color: Colors.black),
                     ),
                     Switch(
                       value: _emailNotificationsEnabled,
@@ -333,24 +323,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           _emailNotificationsEnabled = value;
                         });
                       },
-                      activeColor: Color(0xFF1E3A8A),
+                      activeColor: const Color(0xFF1E3A8A),
                     ),
                   ],
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 // Save Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _saveProfile,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF1E3A8A),
-                      padding: EdgeInsets.symmetric(vertical: 15),
+                      backgroundColor: const Color(0xFF1E3A8A),
+                      padding: const EdgeInsets.symmetric(vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Save',
                       style: TextStyle(
                         fontSize: 16,
@@ -359,7 +349,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
             ),
           ),
